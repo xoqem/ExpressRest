@@ -2,9 +2,20 @@ var mongo = require('mongodb');
 
 var COLLECTION_NAME = 'addresses';
 
+/**
+ * The credentials to login to our mongo db.  In this case, we've created
+ * a specific user and password for this app, and we can delete that user
+ * easily, so having the username / password in the server side code should
+ * be ok.  We could potentially move this out to a config to make it slightly
+ * easier to find and edit.
+ */
 var DB_USER_NAME = 'app';
 var DB_PASSWORD = 'test123';
 
+/**
+ * Construct the URI for our mongo database.  We could potentially move this
+ * out to a config to make it slightly easier to find and edit.
+ */
 var mongoURI = [
   'mongodb://',
   DB_USER_NAME,
