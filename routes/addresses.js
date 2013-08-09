@@ -13,10 +13,12 @@ var COLLECTION_NAME = 'addresses';
 /**
  * Sends an error message as a response, and also log it to the console.
  * @param res - Express response object
+ * @param err - Express error object
  * @param errorMessage
  */
 
-var sendErrorResponse = function(res, errorMessage) {
+var sendErrorResponse = function(res, err, errorMessage) {
+  errorMessage = [errorMessage, err].join(' ');
   console.log(errorMessage);
   res.send({
     'error': errorMessage
@@ -33,7 +35,7 @@ db = new Db(DB_NAME, server, {
 
 db.open(function(err, db) {
   if (err) {
-    console.log('Error opening db.');
+    console.log('Error opening db.', err);
   } else {
     console.log(['Connected to', DB_NAME].join(' '));
     db.collection(COLLECTION_NAME, {
@@ -80,7 +82,7 @@ exports.findById = function(req, res) {
       '_id': new BSON.ObjectID(id)
     }, function (err, item) {
       if (err) {
-        sendErrorResponse(res, ['Error finding address:', id].join(' '));
+        sendErrorResponse(res, err, ['Error finding address:', id].join(' '));
       } else {
         console.log(['Found address:', item].join(' '));
         res.send(item);
@@ -100,7 +102,7 @@ exports.findAll = function(req, res) {
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.find().toArray(function(err, items) {
       if (err) {
-        sendErrorResponse(res, 'Error getting addresses.');
+        sendErrorResponse(res, err, 'Error getting addresses.');
       } else {
         console.log(['Found addresses:', items].join(' '));
         res.send(items);
@@ -123,7 +125,7 @@ exports.addAddress = function(req, res) {
       safe: true
     }, function(err, result) {
       if (err) {
-        sendErrorResponse(res, 'Error adding address.');
+        sendErrorResponse(res, err, 'Error adding address.');
       } else {
         console.log(['Success:', JSON.stringify(result[0])].join(' '));
         res.send(result[0]);
@@ -150,7 +152,7 @@ exports.updateAddress = function(req, res) {
       safe: true
     }, function(err, result) {
       if (err) {
-        sendErrorResponse(res, ['Error updating address:', id].join(' '));
+        sendErrorResponse(res, err, ['Error updating address:', id].join(' '));
       } else {
         res.send(address);
       }
@@ -174,7 +176,7 @@ exports.deleteAddress = function(req, res) {
       safe: true
     }, function (err, result) {
       if (err) {
-        sendErrorResponse(res, 'Error removing address');
+        sendErrorResponse(res, err, 'Error removing address');
       } else {
         console.log(['Address deleted:', id].join(' '));
         res.send(req.body);
