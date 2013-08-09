@@ -4,8 +4,8 @@ ExpressRest
 Experimenting with using Node.js and Express to create a rest API.
 
 
-To run:
+To get started:
 
 1. npm install
-2. node app.js
-3. Open http://localhost:4730/ in your browser
+2. node server.js
+3. Open http://localhost:3000/addresses in your browser
