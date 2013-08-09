@@ -1,6 +1,6 @@
-var mongo = require('mongdb');
+var mongo = require('mongodb');
 
-var Server = mongo.server,
+var Server = mongo.Server,
   Db = mongo.Db,
   BSON = mongo.BSONPure;
 
