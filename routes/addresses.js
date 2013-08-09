@@ -4,18 +4,37 @@ var Server = mongo.Server,
   Db = mongo.Db,
   BSON = mongo.BSONPure;
 
+/**
+ * Constants for the db
+ */
 var DB_NAME = 'addressesdb';
 var COLLECTION_NAME = 'addresses';
+
+/**
+ * Sends an error message as a response, and also log it to the console.
+ * @param res - Express response object
+ * @param errorMessage
+ */
+
+var sendErrorResponse = function(res, errorMessage) {
+  console.log(errorMessage);
+  res.send({
+    'error': errorMessage
+  });
+};
 
 var server = new Server('localhost', 27017, {
   auto_reconnect: true
 });
+
 db = new Db(DB_NAME, server, {
   safe: true
 });
 
 db.open(function(err, db) {
-  if (!err) {
+  if (err) {
+    console.log('Error opening db.');
+  } else {
     console.log(['Connected to', DB_NAME].join(' '));
     db.collection(COLLECTION_NAME, {
       safe: true
@@ -47,6 +66,11 @@ db.open(function(err, db) {
   }
 });
 
+/**
+ * Route for finding an address by id.  Expects req.params.id to be set.
+ * @param req
+ * @param res
+ */
 exports.findById = function(req, res) {
   var id = req.params.id;
   console.log(['Finding address by id:', id].join(' '));
@@ -55,21 +79,41 @@ exports.findById = function(req, res) {
     collection.findOne({
       '_id': new BSON.ObjectID(id)
     }, function (err, item) {
-      res.send(item);
+      if (err) {
+        sendErrorResponse(res, ['Error finding address:', id].join(' '));
+      } else {
+        console.log(['Found address:', item].join(' '));
+        res.send(item);
+      }
     });
   });
 };
 
+/**
+ * Route for getting all addresses.
+ * @param req
+ * @param res
+ */
 exports.findAll = function(req, res) {
   console.log('Getting all addresses');
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.find().toArray(function(err, items) {
-      res.send(items);
+      if (err) {
+        sendErrorResponse(res, 'Error getting addresses.');
+      } else {
+        console.log(['Found addresses:', items].join(' '));
+        res.send(items);
+      }
     });
   });
 };
 
+/**
+ * Route for adding an address.
+ * @param req
+ * @param res
+ */
 exports.addAddress = function(req, res) {
   var address = req.body;
   conols.log(['Adding address:', JSON.stringify(address)].join(' '));
@@ -79,9 +123,7 @@ exports.addAddress = function(req, res) {
       safe: true
     }, function(err, result) {
       if (err) {
-        res.send({
-          'error': 'Error adding address.'
-        });
+        sendErrorResponse(res, 'Error adding address.');
       } else {
         console.log(['Success:', JSON.stringify(result[0])].join(' '));
         res.send(result[0]);
@@ -90,6 +132,11 @@ exports.addAddress = function(req, res) {
   });
 };
 
+/**
+ * Route for updating an address by id.  Expects req.params.id to be set.
+ * @param req
+ * @param res
+ */
 exports.updateAddress = function(req, res) {
   var id = req.params.id;
   var address = req.body;
@@ -103,21 +150,19 @@ exports.updateAddress = function(req, res) {
       safe: true
     }, function(err, result) {
       if (err) {
-        console.log([
-          'Error updating address:',
-          id
-        ].join(' '));
-        res.send({
-          'error': 'Error updating address.'
-        });
+        sendErrorResponse(res, ['Error updating address:', id].join(' '));
       } else {
-
         res.send(address);
       }
     });
   });
 };
 
+/**
+ * Route for deleting an address by id.  Expects req.params.id to be set.
+ * @param req
+ * @param res
+ */
 exports.deleteAddress = function(req, res) {
   var id = req.params.id;
   console.log(['Deleteing address:', id].join(' '));
@@ -129,9 +174,7 @@ exports.deleteAddress = function(req, res) {
       safe: true
     }, function (err, result) {
       if (err) {
-        res.send({
-          'error': 'Error removing address'
-        });
+        sendErrorResponse(res, 'Error removing address');
       } else {
         console.log(['Address deleted:', id].join(' '));
         res.send(req.body);
