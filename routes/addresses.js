@@ -1,14 +1,17 @@
 var mongo = require('mongodb');
 
-var Server = mongo.Server,
-  Db = mongo.Db,
-  BSON = mongo.BSONPure;
-
-/**
- * Constants for the db
- */
-var DB_NAME = 'addressesdb';
 var COLLECTION_NAME = 'addresses';
+
+var DB_USER_NAME = 'app';
+var DB_PASSWORD = 'test123';
+
+var mongoURI = [
+  'mongodb://',
+  DB_USER_NAME,
+  ':',
+  DB_PASSWORD,
+  '@ds037758.mongolab.com:37758/heroku_app17400147'
+].join('');
 
 /**
  * Sends an error message as a response, and also log it to the console.
@@ -16,7 +19,6 @@ var COLLECTION_NAME = 'addresses';
  * @param err - Express error object
  * @param errorMessage
  */
-
 var sendErrorResponse = function(res, err, errorMessage) {
   errorMessage = [errorMessage, err].join(' ');
   console.log(errorMessage);
@@ -25,19 +27,13 @@ var sendErrorResponse = function(res, err, errorMessage) {
   });
 };
 
-var server = new Server('localhost', 27017, {
-  auto_reconnect: true
-});
-
-db = new Db(DB_NAME, server, {
-  safe: true
-});
-
-db.open(function(err, db) {
+var db;
+mongo.Db.connect(mongoURI, function (err, database) {
   if (err) {
-    console.log('Error opening db.', err);
+    console.log('Error connecting to mongo db.'[err].join(' '));
   } else {
-    console.log(['Connected to', DB_NAME].join(' '));
+    console.log('Connected to mongo db.');
+    db = database;
     db.collection(COLLECTION_NAME, {
       safe: true
     }, function(err, collection) {
@@ -48,7 +44,7 @@ db.open(function(err, db) {
         ].join(' '));
         db.collection(COLLECTION_NAME, function(err, collection) {
 
-          var addresses = [{
+          var items = [{
             name: 'John Doe',
             address1: '123 1st Ave',
             address2: 'Apt 4',
@@ -57,7 +53,7 @@ db.open(function(err, db) {
             phone: '1234567890'
           }];
 
-          collection.insert(COLLECTION_NAME, {
+          collection.insert(items, {
             safe:true
           }, function(err, result) {
             // do nothing
@@ -79,7 +75,7 @@ exports.findById = function(req, res) {
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.findOne({
-      '_id': new BSON.ObjectID(id)
+      '_id': new mongo.BSONPure.ObjectID(id)
     }, function (err, item) {
       if (err) {
         sendErrorResponse(res, err, ['Error finding address:', id].join(' '));
@@ -171,7 +167,7 @@ exports.deleteAddress = function(req, res) {
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     db.collection.remove({
-      '_id': BSON.ObjectID(id)
+      '_id': mongo.BSONPure.ObjectID(id)
     }, {
       safe: true
     }, function (err, result) {
