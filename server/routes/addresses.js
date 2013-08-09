@@ -59,7 +59,8 @@ mongo.Db.connect(mongoURI, function (err, database) {
             name: 'John Doe',
             address1: '123 1st Ave',
             address2: 'Apt 4',
-            city: 'Seattle, WA',
+            city: 'Seattle',
+            state: 'WA',
             zip: '98101',
             phone: '1234567890'
           }];
