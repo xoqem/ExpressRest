@@ -34,6 +34,7 @@ define([
       this._addressListView = new AddressListView({
         addressCollection: this._addressCollection
       });
+      this._addressListView.render();
 
       this._addressView = new AddressView();
       this._addressView.render();

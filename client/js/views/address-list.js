@@ -1,13 +1,15 @@
 define([
   'backbone',
-  'views/address-list-item'
-], function(Backbone, AddressListItemView) {
+  'views/address-list-item',
+  'text!templates/address-list.tpl'
+], function(Backbone, AddressListItemView, addressListTemplate) {
 
   return Backbone.View.extend({
 
     el: '#address-list',
     tagName: 'div',
     className: 'list-group',
+    template: _.template(addressListTemplate),
 
     _addressCollection: null,
 
@@ -17,9 +19,11 @@ define([
     },
 
     render: function () {
-      this.$el.empty();
+      this.$el.html(this.template());
+      var $panel = this.$el.children('.panel');
+
       this._addressCollection.each(function(address) {
-        this.$el.append(new AddressListItemView({
+        $panel.append(new AddressListItemView({
           model: address
         }).render().el);
       }, this);
