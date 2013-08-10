@@ -9,6 +9,14 @@ define([
     className: 'list-group-item',
     template: _.template(addressListItemTemplate),
 
+    events: {
+      'click': '_onClick'
+    },
+
+    _onClick: function() {
+      this.trigger('itemClick', this.model);
+    },
+
     render: function () {
       this.$el.attr('href', '#');
       this.$el.html(this.template(this.model.toJSON()));
