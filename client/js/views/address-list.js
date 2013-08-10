@@ -1,32 +1,28 @@
 define([
-  'jquery',
-  'underscore',
   'backbone',
-  'views/address'
-], function($, _, Backbone, AddressView) {
+  'views/address-list-item'
+], function(Backbone, AddressListItemView) {
 
   return Backbone.View.extend({
 
-    el: '#addresses',
-    tagName: 'ul',
+    el: '#address-list',
+    tagName: 'div',
+    className: 'list-group',
 
     _addressCollection: null,
 
     initialize: function (options) {
-      console.log('initialize');
       this._addressCollection = options.addressCollection;
       this._addressCollection.on('reset add remove', this.render, this);
     },
 
     render: function () {
-      console.log('render');
       this.$el.empty();
       this._addressCollection.each(function(address) {
-        this.$el.append(new AddressView({
+        this.$el.append(new AddressListItemView({
           model: address
         }).render().el);
       }, this);
-
       return this;
     }
   });

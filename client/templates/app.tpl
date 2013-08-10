@@ -2,7 +2,7 @@
   <header id="header">
     <h1>Address Book</h1>
   </header>
-  <section id="addresses">
-  </section>
+  <div id="address-list"></div>
+  <div id="address"></div>
   <footer id="footer"></footer>
 </section>

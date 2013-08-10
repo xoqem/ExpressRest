@@ -1,4 +1,7 @@
-<div class="address-container">
+<div class="panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">Selected Address</h3>
+  </div>
   <b>Name:</b> <%- name %><br />
   <b>Address 1:</b> <%- address1 %><br />
   <b>Address 2:</b> <%- address2 %><br />
