@@ -166,6 +166,7 @@ exports.updateAddress = function(req, res) {
       if (err) {
         sendErrorResponse(res, err, ['Error updating address:', id].join(' '));
       } else {
+        console.log('Address updated.');
         res.send(address);
       }
     });
