@@ -17,17 +17,16 @@ define([
     _addressView: null,
 
     initialize: function () {
+      this.render();
+
       this._initCollections();
       this._initViews();
-
-      this.render();
 
       this._addressCollection.fetch();
     },
 
     render: function () {
       this.$el.html(this.template());
-      this._addressView.render();
       return this;
     },
 
@@ -37,6 +36,7 @@ define([
       });
 
       this._addressView = new AddressView();
+      this._addressView.render();
     },
 
     _initCollections: function() {
