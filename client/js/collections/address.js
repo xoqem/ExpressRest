@@ -1,12 +1,11 @@
 define([
   'backbone',
-  'models/address',
-  'configs/app'
-], function(Backbone, AddressModel, appConfig) {
+  'models/address'
+], function(Backbone, AddressModel) {
   return Backbone.Collection.extend({
     model: AddressModel,
 
-    url: [appConfig.apiRoot, 'addresses'].join('/'),
+    url: 'addresses',
 
     comparator: function (address) {
       return address.get('name');
