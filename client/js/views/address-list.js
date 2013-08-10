@@ -43,8 +43,9 @@ define([
       if (listItemView) {
         this._selectedListItemView = listItemView;
         this._selectedListItemView.$el.addClass('active');
-        this.trigger('selectedAddressChanged', address);
       }
+
+      this.trigger('selectedAddressChanged', address);
     },
 
     _getListItemView: function(address) {
