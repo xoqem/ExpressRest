@@ -1,23 +1,27 @@
 var express = require('express'),
 	path = require('path'),
-	http = require('http'),
 	addresses = require('./routes/addresses');
 
 var app = express();
 
-app.configure(function () {
-	app.set('port', process.env.PORT || 3000);
-	app.use(express.logger('dev'));
-	app.use(express.bodyParser()),
-	app.use(express.static(path.join(__dirname, '../client')))
-});
+// log requests for debugging purposes
+app.use(express.logger('dev'));
 
+// allow access to req.body
+app.use(express.bodyParser());
+
+// set the path to the client side code
+app.use(express.static(path.join(__dirname, '../client')));
+
+// create the routes
 app.get('/addresses', addresses.findAll);
 app.get('/addresses/:id', addresses.findById);
 app.post('/addresses', addresses.addAddress);
 app.put('/addresses/:id', addresses.updateAddress);
 app.delete('/addresses/:id', addresses.deleteAddress);
 
-http.createServer(app).listen(app.get('port'), function () {
-    console.log("Express server listening on port " + app.get('port'));
+// set the port and begin listening
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
+  console.log("Listening on " + port);
 });

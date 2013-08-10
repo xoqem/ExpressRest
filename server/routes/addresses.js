@@ -38,6 +38,37 @@ var sendErrorResponse = function(res, err, errorMessage) {
   });
 };
 
+var addDataIfEmpty = function() {
+  db.collection(COLLECTION_NAME, {
+    safe: true
+  }, function(err, collection) {
+    if (err) {
+      console.log([
+        'Collection', COLLECTION_NAME, 'does not exists.',
+        'Populating it with a fake address'
+      ].join(' '));
+      db.collection(COLLECTION_NAME, function(err, collection) {
+
+        var items = [{
+          name: 'John Doe',
+          address1: '123 1st Ave',
+          address2: 'Apt 4',
+          city: 'Seattle',
+          state: 'WA',
+          zip: '98101',
+          phone: '1234567890'
+        }];
+
+        collection.insert(items, {
+          safe:true
+        }, function(err, result) {
+          // do nothing
+        });
+      });
+    }
+  });
+}
+
 var db;
 mongo.Db.connect(mongoURI, function (err, database) {
   if (err) {
@@ -45,34 +76,7 @@ mongo.Db.connect(mongoURI, function (err, database) {
   } else {
     console.log('Connected to mongo db.');
     db = database;
-    db.collection(COLLECTION_NAME, {
-      safe: true
-    }, function(err, collection) {
-      if (err) {
-        console.log([
-          'Collection', COLLECTION_NAME, 'does not exists.',
-          'Populating it with a fake address'
-        ].join(' '));
-        db.collection(COLLECTION_NAME, function(err, collection) {
-
-          var items = [{
-            name: 'John Doe',
-            address1: '123 1st Ave',
-            address2: 'Apt 4',
-            city: 'Seattle',
-            state: 'WA',
-            zip: '98101',
-            phone: '1234567890'
-          }];
-
-          collection.insert(items, {
-            safe:true
-          }, function(err, result) {
-            // do nothing
-          });
-        });
-      }
-    });
+    addDataIfEmpty();
   }
 });
 

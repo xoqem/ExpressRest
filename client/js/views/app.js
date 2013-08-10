@@ -1,11 +1,9 @@
 define([
-  'jquery',
-  'underscore',
   'backbone',
   'views/address-list',
   'collections/address',
   'text!templates/app.handlebars'
-], function($, _, Backbone, AddressListView, AddressCollection,
+], function(Backbone, AddressListView, AddressCollection,
             appTemplate) {
 
   return Backbone.View.extend({
