@@ -24,7 +24,7 @@ define([
 
     _onClick: function() {
       this.trigger('itemClick', this.model);
-    },
+    }
   });
 });
 
