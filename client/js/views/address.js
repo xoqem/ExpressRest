@@ -63,12 +63,23 @@ define([
           label: obj.label,
           value: this.model && this.model.get(obj.key)
         }));
+        this.$el.find('#' + obj.key).on('input', _.bind(function() {
+          this._updateEditingState(true);
+        }, this));
       }, this);
+
+      this._updateEditingState(false);
 
       return this;
     },
 
+    _updateEditingState: function(isEditing) {
+      this.$el.find('.save-button').toggle(isEditing);
+      this.$el.find('.cancel-button').toggle(isEditing);
+    },
+
     _onCancelButtonClick: function() {
+      this._updateEditingState(false);
       this.render();
     },
 
@@ -78,7 +89,8 @@ define([
     },
 
     _onSaveButtonClick: function() {
-      if (this)
+      this._updateEditingState(false);
+
       var properties = {};
       _.each(this.formInputs, function(obj) {
         properties[obj.key] = this.$el.find('#' + obj.key).val();
