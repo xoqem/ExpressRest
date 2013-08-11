@@ -42,9 +42,11 @@ define([
 
     render: function () {
       this.$el.html(this.template());
-      var $addressForm = this.$el.find('.address-form');
+      var $formButtons = this.$el.find('.form-buttons');
+      $formButtons.hide();
+
       _.each(this.formInputs, function(obj) {
-        $addressForm.append(this.inputTemplate({
+        $formButtons.before(this.inputTemplate({
           inputId: obj.key,
           label: obj.label,
           value: this.model.get(obj.key)
