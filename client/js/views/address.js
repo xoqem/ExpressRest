@@ -79,6 +79,7 @@ define([
 
     _onDeleteButtonClick: function() {
       this.model.destroy();
+      this._addressCollection.setSelectedAddress(null);
     },
 
     _onSaveButtonClick: function() {
