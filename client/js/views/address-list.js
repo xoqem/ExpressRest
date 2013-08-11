@@ -23,7 +23,7 @@ define([
 
     initialize: function(options) {
       this._addressCollection = options.addressCollection;
-      this._addressCollection.on('reset add remove', this.render, this);
+      this._addressCollection.on('sort reset add remove', this.render, this);
       this._addressCollection.on(
         'remove', this._onAddressCollectionRemove, this);
       this._addressCollection.on(

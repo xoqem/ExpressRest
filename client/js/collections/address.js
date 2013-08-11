@@ -9,8 +9,8 @@ define([
 
     _selectedAddress: null,
 
-    getSelectedAddress: function(address) {
-      return this._selectedAddress;
+    initialize: function(options) {
+      this.on('change:name', this._onModelNameChange, this);
     },
 
     setSelectedAddress: function(address) {
@@ -20,6 +20,10 @@ define([
 
     comparator: function (address) {
       return address.get('name');
+    },
+
+    _onModelNameChange: function() {
+      this.sort();
     }
   });
 });
