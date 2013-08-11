@@ -11,6 +11,10 @@ define([
     className: 'list-group',
     template: _.template(addressListTemplate),
 
+    events: {
+      "click .add-button": "_onAddButtonClick"
+    },
+
     _addressCollection: null,
 
     // keyed by the address id for the list item
@@ -26,13 +30,21 @@ define([
 
     render: function () {
       this.$el.html(this.template());
-      var $panel = this.$el.children('.panel');
+      var $addressListItems = this.$el.find('.address-list-items');
       this._addressCollection.each(function(address) {
         var listItemView = this._getListItemView(address);
-        $panel.append(listItemView.render().el);
+        $addressListItems.append(listItemView.render().el);
       }, this);
       return this;
     },
+
+    _onAddButtonClick: function() {
+      var address = this._addressCollection.create({
+        name: 'New Contact'
+      });
+      this._addressCollection.setSelectedAddress(address);
+    },
+
 
     _onSelectedAddressChanged: function(address) {
       var listItemView = this._getListItemView(address);
