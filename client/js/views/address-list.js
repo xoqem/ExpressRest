@@ -43,8 +43,12 @@ define([
     _onAddButtonClick: function() {
       var address = this._addressCollection.create({
         name: 'New Contact'
+      }, {
+        wait: true,
+        success: _.bind(function() {
+          this._addressCollection.setSelectedAddress(address);
+        }, this)
       });
-      this._addressCollection.setSelectedAddress(address);
     },
 
 
