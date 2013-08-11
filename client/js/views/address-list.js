@@ -20,6 +20,8 @@ define([
     initialize: function (options) {
       this._addressCollection = options.addressCollection;
       this._addressCollection.on('reset add remove', this.render, this);
+      this._addressCollection.on(
+        'selectedAddressChanged', this._onSelectedAddressChanged, this);
     },
 
     render: function () {
@@ -32,7 +34,7 @@ define([
       return this;
     },
 
-    setSelectedAddress: function(address) {
+    _onSelectedAddressChanged: function(address) {
       var listItemView = this._getListItemView(address);
       if (listItemView === this._selectedListItemView) return;
 
@@ -44,8 +46,6 @@ define([
         this._selectedListItemView = listItemView;
         this._selectedListItemView.$el.addClass('active');
       }
-
-      this.trigger('selectedAddressChanged', address);
     },
 
     _getListItemView: function(address) {

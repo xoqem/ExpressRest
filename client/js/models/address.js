@@ -2,7 +2,10 @@ define([
   'backbone'
 ], function(Backbone) {
   return Backbone.Model.extend({
+
     idAttribute: "_id",
+
+    urlRoot: 'addresses',
 
     defaults: {
       name: '',
@@ -13,5 +16,6 @@ define([
       zip: '',
       phone: ''
     }
+
   });
 });

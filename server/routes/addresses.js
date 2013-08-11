@@ -130,7 +130,7 @@ exports.findAll = function(req, res) {
  */
 exports.addAddress = function(req, res) {
   var address = req.body;
-  conols.log(['Adding address:', JSON.stringify(address)].join(' '));
+  console.log(['Adding address:', JSON.stringify(address)].join(' '));
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.insert(address, {
@@ -159,7 +159,7 @@ exports.updateAddress = function(req, res) {
   console.log(JSON.stringify(address));
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.update({
-      '_id': new BSON.ObjectID(id)
+      '_id': new mongo.BSONPure.ObjectID(id)
     }, address, {
       safe: true
     }, function(err, result) {
@@ -183,7 +183,7 @@ exports.deleteAddress = function(req, res) {
   console.log(['Deleteing address:', id].join(' '));
 
   db.collection(COLLECTION_NAME, function(err, collection) {
-    db.collection.remove({
+    collection.remove({
       '_id': mongo.BSONPure.ObjectID(id)
     }, {
       safe: true

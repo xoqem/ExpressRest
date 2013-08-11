@@ -34,21 +34,16 @@ define([
       this._addressListView = new AddressListView({
         addressCollection: this._addressCollection
       });
-      this._addressListView.on(
-        'selectedAddressChanged', this._onSelectedAddressChanged, this);
       this._addressListView.render();
 
-      this._addressView = new AddressView();
+      this._addressView = new AddressView({
+        addressCollection: this._addressCollection
+      });
       this._addressView.render();
     },
 
     _initCollections: function() {
       this._addressCollection = new AddressCollection();
-    },
-
-    _onSelectedAddressChanged: function(address) {
-      this._addressView.model = address;
-      this._addressView.render();
     }
   });
 });
