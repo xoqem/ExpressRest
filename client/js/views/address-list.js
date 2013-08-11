@@ -36,6 +36,10 @@ define([
       this._addressCollection.each(function(address) {
         var listItemView = this._getListItemView(address);
         $addressListItems.append(listItemView.render().el);
+
+        // Need to re-bind list item events as it may have been removed from
+        // the dom, and we are adding it back.
+        listItemView.delegateEvents();
       }, this);
       return this;
     },
@@ -73,7 +77,9 @@ define([
         var listItemView = new AddressListItemView({
           model: address
         });
-        listItemView.on('itemClick', this.setSelectedAddress, this);
+        listItemView.on('itemClick', function() {
+          this._addressCollection.setSelectedAddress(address);
+        }, this);
         this._listItemViews[address.id] = listItemView;
       }
       return this._listItemViews[address.id];
