@@ -50,6 +50,12 @@ define([
 
     render: function () {
       this.$el.html(this.template());
+
+      if (!this.model) {
+        this.$el.find('.address-form').hide();
+        return;
+      }
+
       var $formButtons = this.$el.find('.form-buttons');
       _.each(this.formInputs, function(obj) {
         $formButtons.before(this.inputTemplate({
@@ -58,17 +64,6 @@ define([
           value: this.model && this.model.get(obj.key)
         }));
       }, this);
-
-      var $saveButton = this.$el.find('.save-button');
-      var $cancelButton = this.$el.find('.cancel-button');
-      var $deleteButton = this.$el.find('.delete-button');
-
-      if (!this.model) {
-        $deleteButton.hide();
-      } else {
-        $cancelButton.hide();
-        $saveButton.hide();
-      }
 
       return this;
     },
@@ -89,12 +84,7 @@ define([
         properties[obj.key] = this.$el.find('#' + obj.key).val();
       }, this);
 
-      if (this.model) {
-        this.model.save(properties);
-      } else {
-        var address = this._addressCollection.create(properties);
-        this._addressCollection.setSelectedAddress(address);
-      }
+      this.model.save(properties);
     },
 
     _onSelectedAddressChanged: function(address) {

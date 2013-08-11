@@ -21,14 +21,16 @@ define([
     _listItemViews: {},
     _selectedListItemView: null,
 
-    initialize: function (options) {
+    initialize: function(options) {
       this._addressCollection = options.addressCollection;
       this._addressCollection.on('reset add remove', this.render, this);
+      this._addressCollection.on(
+        'remove', this._onAddressCollectionRemove, this);
       this._addressCollection.on(
         'selectedAddressChanged', this._onSelectedAddressChanged, this);
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template());
       var $addressListItems = this.$el.find('.address-list-items');
       this._addressCollection.each(function(address) {
@@ -71,6 +73,10 @@ define([
         this._listItemViews[address.id] = listItemView;
       }
       return this._listItemViews[address.id];
+    },
+
+    _onAddressCollectionRemove: function(address) {
+      delete this._listItemViews[address.id];
     }
   });
 });
