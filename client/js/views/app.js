@@ -30,6 +30,10 @@ define([
       return this;
     },
 
+    _initCollections: function() {
+      this._addressCollection = new AddressCollection();
+    },
+
     _initViews: function() {
       this._addressListView = new AddressListView({
         addressCollection: this._addressCollection
@@ -40,10 +44,6 @@ define([
         addressCollection: this._addressCollection
       });
       this._addressView.render();
-    },
-
-    _initCollections: function() {
-      this._addressCollection = new AddressCollection();
     }
   });
 });

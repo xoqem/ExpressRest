@@ -72,7 +72,7 @@ var addDataIfEmpty = function() {
 var db;
 mongo.Db.connect(mongoURI, function (err, database) {
   if (err) {
-    console.log('Error connecting to mongo db.'[err].join(' '));
+    console.log(['Error connecting to mongo db.', err].join(' '));
   } else {
     console.log('Connected to mongo db.');
     db = database;

@@ -7,12 +7,10 @@ define([
   return Backbone.View.extend({
 
     el: '#address-list',
-    tagName: 'div',
-    className: 'list-group',
     template: _.template(addressListTemplate),
 
     events: {
-      "click .add-button": "_onAddButtonClick"
+      'click .add-button': '_onAddButtonClick'
     },
 
     _addressCollection: null,
@@ -55,17 +53,13 @@ define([
       });
     },
 
-
     _onSelectedAddressChanged: function(address) {
-      var listItemView = this._getListItemView(address);
-      if (listItemView === this._selectedListItemView) return;
-
       if (this._selectedListItemView) {
         this._selectedListItemView.$el.removeClass('active');
       }
 
-      if (listItemView) {
-        this._selectedListItemView = listItemView;
+      this._selectedListItemView = this._getListItemView(address);
+      if (this._selectedListItemView) {
         this._selectedListItemView.$el.addClass('active');
       }
     },

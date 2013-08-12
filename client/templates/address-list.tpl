@@ -3,7 +3,7 @@
     Addresses
   </div>
 
-  <div class="address-list-items">
+  <div class="address-list-items list-group">
   </div>
 
   <button type="button" class="add-button btn btn-primary">Add</button>

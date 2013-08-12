@@ -12,9 +12,9 @@ define([
     inputTemplate: _.template(addressFormInputTemplate),
 
     events: {
-      "click .delete-button": "_onDeleteButtonClick",
-      "click .cancel-button": "_onCancelButtonClick",
-      "click .save-button": "_onSaveButtonClick"
+      'click .delete-button': '_onDeleteButtonClick',
+      'click .cancel-button': '_onCancelButtonClick',
+      'click .save-button': '_onSaveButtonClick'
     },
 
     formInputs: [{
@@ -48,27 +48,27 @@ define([
         'selectedAddressChanged', this._onSelectedAddressChanged, this);
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template());
 
-      if (!this.model) {
+      if (this.model) {
+        $addressFormButtons = this.$el.find('.address-form-buttons');
+        _.each(this.formInputs, function(obj) {
+          $addressFormButtons.before(this.inputTemplate({
+            inputId: obj.key,
+            label: obj.label,
+            value: this.model.get(obj.key)
+          }));
+          this.$el.find('#' + obj.key).on('input', _.bind(function() {
+            this._updateEditingState(true);
+          }, this));
+        }, this);
+
+        this._updateEditingState(false);
+
+      } else {
         this.$el.find('.address-form').hide();
-        return;
       }
-
-      var $formButtons = this.$el.find('.form-buttons');
-      _.each(this.formInputs, function(obj) {
-        $formButtons.before(this.inputTemplate({
-          inputId: obj.key,
-          label: obj.label,
-          value: this.model && this.model.get(obj.key)
-        }));
-        this.$el.find('#' + obj.key).on('input', _.bind(function() {
-          this._updateEditingState(true);
-        }, this));
-      }, this);
-
-      this._updateEditingState(false);
 
       return this;
     },

@@ -5,7 +5,7 @@
 
   <form class="address-form form-horizontal">
 
-    <div class="form-group form-buttons">
+    <div class="address-form-buttons form-group">
       <div class="col-lg-3"></div>
       <div class="col-lg-3">
         <button type="button" class="delete-button btn btn-danger">Delete</button>
