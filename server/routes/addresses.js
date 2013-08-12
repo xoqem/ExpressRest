@@ -38,36 +38,14 @@ var sendErrorResponse = function(res, err, errorMessage) {
   });
 };
 
-var addDataIfEmpty = function() {
-  db.collection(COLLECTION_NAME, {
-    safe: true
-  }, function(err, collection) {
-    if (err) {
-      console.log([
-        'Collection', COLLECTION_NAME, 'does not exists.',
-        'Populating it with a fake address'
-      ].join(' '));
-      db.collection(COLLECTION_NAME, function(err, collection) {
-
-        var items = [{
-          name: 'John Doe',
-          address1: '123 1st Ave',
-          address2: 'Apt 4',
-          city: 'Seattle',
-          state: 'WA',
-          zip: '98101',
-          phone: '1234567890'
-        }];
-
-        collection.insert(items, {
-          safe:true
-        }, function(err, result) {
-          // do nothing
-        });
-      });
-    }
-  });
-}
+/**
+ * Convenience method to return the object id expected by mongo.
+ * @param id
+ * @returns {Object} the object id expected by mongo
+ */
+var getObjectId = function(id) {
+  return new mongo.BSONPure.ObjectID(id);
+};
 
 var db;
 mongo.Db.connect(mongoURI, function (err, database) {
@@ -76,7 +54,6 @@ mongo.Db.connect(mongoURI, function (err, database) {
   } else {
     console.log('Connected to mongo db.');
     db = database;
-    addDataIfEmpty();
   }
 });
 
@@ -91,7 +68,7 @@ exports.findById = function(req, res) {
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.findOne({
-      '_id': new mongo.BSONPure.ObjectID(id)
+      '_id': getObjectId(id)
     }, function (err, item) {
       if (err) {
         sendErrorResponse(res, err, ['Error finding address:', id].join(' '));
@@ -130,17 +107,17 @@ exports.findAll = function(req, res) {
  */
 exports.addAddress = function(req, res) {
   var address = req.body;
-  console.log(['Adding address:', JSON.stringify(address)].join(' '));
+  console.log(['Adding address:', address].join(' '));
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.insert(address, {
       safe: true
-    }, function(err, result) {
+    }, function(err, items) {
       if (err) {
         sendErrorResponse(res, err, 'Error adding address.');
       } else {
-        console.log(['Success:', JSON.stringify(result[0])].join(' '));
-        res.send(result[0]);
+        console.log(['Success:', items[0]].join(' '));
+        res.send(items[0]);
       }
     });
   });
@@ -154,12 +131,13 @@ exports.addAddress = function(req, res) {
 exports.updateAddress = function(req, res) {
   var id = req.params.id;
   var address = req.body;
-  delete address._id;
   console.log(['Updating address:', id].join(' '));
-  console.log(JSON.stringify(address));
+
+  delete address._id;
+
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.update({
-      '_id': new mongo.BSONPure.ObjectID(id)
+      '_id': getObjectId(id)
     }, address, {
       safe: true
     }, function(err, result) {
@@ -184,7 +162,7 @@ exports.deleteAddress = function(req, res) {
 
   db.collection(COLLECTION_NAME, function(err, collection) {
     collection.remove({
-      '_id': mongo.BSONPure.ObjectID(id)
+      '_id': getObjectId(id)
     }, {
       safe: true
     }, function (err, result) {
