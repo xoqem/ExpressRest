@@ -2,14 +2,14 @@ body {
   padding-left: 20px;
 }
 
-#address-list {
+.address-list {
   width: 300px;
   float: left;
   margin-right: 20px;
 }
 
-#address {
-  width: 500px;
+.address {
+  width: 400px;
   float: left;
 }
 

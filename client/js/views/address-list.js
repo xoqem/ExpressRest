@@ -6,7 +6,7 @@ define([
 
   return Backbone.View.extend({
 
-    el: '#address-list',
+    el: '.address-list',
     template: _.template(addressListTemplate),
 
     events: {

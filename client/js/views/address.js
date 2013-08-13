@@ -7,7 +7,7 @@ define([
 
   return Backbone.View.extend({
 
-    el: '#address',
+    el: '.address',
     template: _.template(addressTemplate),
     inputTemplate: _.template(addressFormInputTemplate),
 

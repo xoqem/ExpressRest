@@ -1,5 +1,5 @@
-<header id="header">
+<header>
   <h1>Address Book</h1>
 </header>
-<div id="address-list"></div>
-<div id="address"></div>
+<div class="address-list"></div>
+<div class="address"></div>
