@@ -47,13 +47,13 @@ var getObjectId = function(id) {
   return new mongo.BSONPure.ObjectID(id);
 };
 
-var db;
-mongo.Db.connect(mongoURI, function (err, database) {
+var collection;
+mongo.Db.connect(mongoURI, function (err, db) {
   if (err) {
     console.log(['Error connecting to mongo db.', err].join(' '));
   } else {
     console.log('Connected to mongo db.');
-    db = database;
+    collection = db.collection(COLLECTION_NAME);
   }
 });
 
@@ -66,17 +66,15 @@ exports.findById = function(req, res) {
   var id = req.params.id;
   console.log(['Finding address by id:', id].join(' '));
 
-  db.collection(COLLECTION_NAME, function(err, collection) {
-    collection.findOne({
-      '_id': getObjectId(id)
-    }, function (err, item) {
-      if (err) {
-        sendErrorResponse(res, err, ['Error finding address:', id].join(' '));
-      } else {
-        console.log(['Found address:', item].join(' '));
-        res.send(item);
-      }
-    });
+  collection.findOne({
+    '_id': getObjectId(id)
+  }, function (err, item) {
+    if (err) {
+      sendErrorResponse(res, err, ['Error finding address:', id].join(' '));
+    } else {
+      console.log(['Found address:', item].join(' '));
+      res.send(item);
+    }
   });
 };
 
@@ -88,15 +86,13 @@ exports.findById = function(req, res) {
 exports.findAll = function(req, res) {
   console.log('Getting all addresses');
 
-  db.collection(COLLECTION_NAME, function(err, collection) {
-    collection.find().toArray(function(err, items) {
-      if (err) {
-        sendErrorResponse(res, err, 'Error getting addresses.');
-      } else {
-        console.log(['Found addresses:', items].join(' '));
-        res.send(items);
-      }
-    });
+  collection.find().toArray(function(err, items) {
+    if (err) {
+      sendErrorResponse(res, err, 'Error getting addresses.');
+    } else {
+      console.log(['Found addresses:', items].join(' '));
+      res.send(items);
+    }
   });
 };
 
@@ -109,17 +105,15 @@ exports.addAddress = function(req, res) {
   var address = req.body;
   console.log(['Adding address:', address].join(' '));
 
-  db.collection(COLLECTION_NAME, function(err, collection) {
-    collection.insert(address, {
-      safe: true
-    }, function(err, items) {
-      if (err) {
-        sendErrorResponse(res, err, 'Error adding address.');
-      } else {
-        console.log(['Success:', items[0]].join(' '));
-        res.send(items[0]);
-      }
-    });
+  collection.insert(address, {
+    safe: true
+  }, function(err, items) {
+    if (err) {
+      sendErrorResponse(res, err, 'Error adding address.');
+    } else {
+      console.log(['Success:', items[0]].join(' '));
+      res.send(items[0]);
+    }
   });
 };
 
@@ -135,19 +129,17 @@ exports.updateAddress = function(req, res) {
 
   delete address._id;
 
-  db.collection(COLLECTION_NAME, function(err, collection) {
-    collection.update({
-      '_id': getObjectId(id)
-    }, address, {
-      safe: true
-    }, function(err, result) {
-      if (err) {
-        sendErrorResponse(res, err, ['Error updating address:', id].join(' '));
-      } else {
-        console.log('Address updated.');
-        res.send(address);
-      }
-    });
+  collection.update({
+    '_id': getObjectId(id)
+  }, address, {
+    safe: true
+  }, function(err, result) {
+    if (err) {
+      sendErrorResponse(res, err, ['Error updating address:', id].join(' '));
+    } else {
+      console.log('Address updated.');
+      res.send(address);
+    }
   });
 };
 
@@ -160,18 +152,16 @@ exports.deleteAddress = function(req, res) {
   var id = req.params.id;
   console.log(['Deleteing address:', id].join(' '));
 
-  db.collection(COLLECTION_NAME, function(err, collection) {
-    collection.remove({
-      '_id': getObjectId(id)
-    }, {
-      safe: true
-    }, function (err, result) {
-      if (err) {
-        sendErrorResponse(res, err, 'Error removing address');
-      } else {
-        console.log(['Address deleted:', id].join(' '));
-        res.send(req.body);
-      }
-    });
+  collection.remove({
+    '_id': getObjectId(id)
+  }, {
+    safe: true
+  }, function (err, result) {
+    if (err) {
+      sendErrorResponse(res, err, 'Error removing address');
+    } else {
+      console.log(['Address deleted:', id].join(' '));
+      res.send(req.body);
+    }
   });
 };
