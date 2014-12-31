@@ -9,8 +9,8 @@ var COLLECTION_NAME = 'addresses';
  * be ok.  We could potentially move this out to a config to make it slightly
  * easier to find and edit.
  */
-var DB_USER_NAME = 'app';
-var DB_PASSWORD = 'test123';
+var DB_USER_NAME = 'username'; // TODO: insert user name
+var DB_PASSWORD = 'pasword'; // TODO: insert password
 
 /**
  * Construct the URI for our mongo database.  We could potentially move this
@@ -21,7 +21,7 @@ var mongoURI = [
   DB_USER_NAME,
   ':',
   DB_PASSWORD,
-  '@ds037758.mongolab.com:37758/heroku_app17400147'
+  '@########.mongolab.com:#####/heroku_app########' // TODO: insert correct URL, should be in a similar format
 ].join('');
 
 /**
